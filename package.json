@@ -1,0 +1,29 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node index.js",
+    "db": "c:/mysql/bin/mysql -u brian -p"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BrianCKWang/employee-tracker.git"
+  },
+  "author": "BrianCKWang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BrianCKWang/employee-tracker/issues"
+  },
+  "homepage": "https://github.com/BrianCKWang/employee-tracker#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^7.3.3",
+    "mysql2": "^2.2.5"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3"
+  }
+}
