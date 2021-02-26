@@ -5,6 +5,7 @@
 // const generateContent = require('./utils/generateContent');
 // const { writeFile, copyFile } = require('./utils/file-handlers')
 const db = require('./db/database');
+const cTable = require('console.table');
 
 const isDebugMode = false;
 
@@ -152,9 +153,6 @@ const isDebugMode = false;
 
 const migrate = function () {
 
-  // sendQuery(`DROP TABLE IF EXISTS department;`,[]);
-  // sendQuery(`DROP TABLE IF EXISTS role;`,[]);
-  // sendQuery(`DROP TABLE IF EXISTS employee;`,[]);
   db.promise().query(`DROP TABLE IF EXISTS department;`,[])
   .then( ([rows,fields]) => {
     if(isDebugMode){
@@ -210,67 +208,8 @@ const migrate = function () {
       console.log(rows);
     }
   })
-  // db.promise().query(`INSERT INTO role (title, salary, department) 
-  //                     VALUES ('engineering lead', 210000 , 1),
-  //                     VALUES ('SDE3', 145000 , 1),
-  //                     VALUES ('SDE2', 115000 , 1),
-  //                     VALUES ('SDE1', 95000 , 1),
-  //                     VALUES ('sales lead', 175000 , 2);
-  // `,[])
-  // .then( ([rows,fields]) => {
-  //   if(isDebugMode){
-  //     console.log(rows);
-  //   }
-  // })
-  // db.promise().query(`INSERT INTO department (first_name, last_name, role_id, manager_id) 
-  //                   VALUES ('p1_first', 'p1_last', 1, ),
-  //                   VALUES ('p2_first', 'p2_last', 2, 1),
-  //                   VALUES ('p3_first', 'p3_last', 2, 1),
-  //                   VALUES ('p4_first', 'p4_last', 3, 1),
-  //                   VALUES ('p5_first', 'p5_last', 3, 1),
-  //                   VALUES ('p6_first', 'p6_last', 4, 1),
-  //                   VALUES ('p7_first', 'p7_last', 4, 1),
-  //                   VALUES ('p8_first', 'p8_last', 4, 1),
-  //                   VALUES ('p9_first', 'p9_last', 5, );
-  // `,[])
-  // .then( ([rows,fields]) => {
-  //   if(isDebugMode){
-  //     console.log(rows);
-  //   }
-  // })
   .catch(console.log)
   .then( () => db.end());
-}
-
-const seed = function () {
-
-  db.promise().query(`INSERT INTO department (name) 
-            VALUES ('engineering'),
-            VALUES ('sales');
-            `,
-  []);
-
-  db.promise().query(`INSERT INTO role (title, salary, department) 
-            VALUES ('engineering lead', 210000 , 1),
-            VALUES ('SDE3', 145000 , 1),
-            VALUES ('SDE2', 115000 , 1),
-            VALUES ('SDE1', 95000 , 1),
-            VALUES ('sales lead', 175000 , 2);
-            `,
-  []);
-
-  db.promise().query(`INSERT INTO department (first_name, last_name, role_id, manager_id) 
-            VALUES ('p1_first', 'p1_last', 1, ),
-            VALUES ('p2_first', 'p2_last', 2, 1),
-            VALUES ('p3_first', 'p3_last', 2, 1),
-            VALUES ('p4_first', 'p4_last', 3, 1),
-            VALUES ('p5_first', 'p5_last', 3, 1),
-            VALUES ('p6_first', 'p6_last', 4, 1),
-            VALUES ('p7_first', 'p7_last', 4, 1),
-            VALUES ('p8_first', 'p8_last', 4, 1),
-            VALUES ('p9_first', 'p9_last', 5, );
-  `,
-[]);
 }
 
 const sendQuery = function (sql, params) {
@@ -287,24 +226,57 @@ const sendQuery = function (sql, params) {
   );
 }
 
+function promptAction() {
+  return inquirer.prompt({
+    type: 'rawlist',
+    name: 'licenseCategory',
+    message: 'Choose a license category.',
+    choices: ['View All Employees', 
+              'View All Employees By Department', 
+              'View All Employees By Manager', 
+              'Add Employee', 
+              'Remove Employee', 
+              'Update Employee Role', 
+              'Update Employee Manager', 
+              'View Roles',
+              'Edit Role',
+              'View Department',
+              'Edit Department'
+            ],
+    default: 'Apache',
+    loop: false
+  })
+  .then(license => {
+    portfolioData.license = license;
+  })
+}
+
 function main(){
-  migrate();
 
-  // console.log(db);
-  // const first_name = 'brian';
-  // const last_name = 'wang'; 
-  // const  role_id = '1';
-  // const  manager_id = '2';
+  db.promise().query(`
+    SELECT e.id AS "ID", 
+          e.first_name AS "First Name", 
+          e.last_name AS "Last Name", 
+          r.title AS "Title", 
+          d.name AS "Department", 
+          r.salary "Salary", 
+          CONCAT(m.first_name , " ", m.last_name) AS "Manager"
+    FROM employee e
+    LEFT JOIN employee m ON e.manager_id = m.id
+    LEFT JOIN role r ON e.role_id = r.id
+    LEFT JOIN department d ON r.department_id = d.id
+  ;`)
+  .then( ([rows]) => {
+    if(isDebugMode){
+      console.log(rows);
+    }
+    console.table(rows);
+  })
+  
+  .catch(console.log)
+  .then( () => db.end());
 
-  // const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) 
-  // VALUES (?,?,?,?)`;
-  // const params = [first_name, last_name, role_id, manager_id];
 
-  // sendQuery(sql, params);
-  // let manager = new Manager();
-  // let propertyList = Object.keys(manager).filter(word => {
-  //   return !word.startsWith('get');
-  // });
   // promptManagerDetails(manager, propertyList)
   // .then(employeeList => {
   //   return promptEmployeeDetails(employeeList);

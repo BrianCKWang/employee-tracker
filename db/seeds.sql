@@ -1,3 +1,5 @@
+USE brianckwang_company;
+
 INSERT INTO department (name) 
             VALUES ('engineering'),
                    ('sales');
