@@ -3,8 +3,8 @@ const db = require('./database');
 const viewAllEmployees = function() {
   return db.promise().execute(`
       SELECT e.id AS "ID", 
-            e.first_name AS "First Name", 
-            e.last_name AS "Last Name", 
+            e.first_name AS "First_Name", 
+            e.last_name AS "Last_Name", 
             r.title AS "Title", 
             d.name AS "Department", 
             r.salary "Salary", 
@@ -36,8 +36,8 @@ const viewAllDepartments = function() {
 const viewEmployeeByDepartment = function(department_id) {
   return db.promise().execute(`
     SELECT e.id AS "ID", 
-          e.first_name AS "First Name", 
-          e.last_name AS "Last Name", 
+          e.first_name AS "First_Name", 
+          e.last_name AS "Last_Name", 
           r.title AS "Title", 
           d.name AS "Department", 
           r.salary "Salary", 
@@ -75,8 +75,8 @@ const viewEmployeeByManager = function(manager_id) {
   console.log(`manager_id: ${manager_id}`);
   return db.promise().execute(`
     SELECT e.id AS "ID", 
-          e.first_name AS "First Name", 
-          e.last_name AS "Last Name", 
+          e.first_name AS "First_Name", 
+          e.last_name AS "Last_Name", 
           r.title AS "Title", 
           d.name AS "Department", 
           r.salary "Salary"
@@ -119,25 +119,29 @@ const addEmployee = function(employee) {
   });
 }
 
-const removeEmployee = function() {
-  return db.promise().execute(
-  )
+const removeEmployee = function(employee_id) {
+  return db.promise().execute(`
+    DELETE FROM employee
+    WHERE id = ${employee_id}
+  ;`)
   .catch(err => {
     console.log(err);
   });
 }
 
 const updateEmployeeRole = function() {
-  return db.promise().execute(
-  )
+  return db.promise().execute(`
+
+  ;`)
   .catch(err => {
     console.log(err);
   });
 }
 
 const updateEmployeeManager = function() {
-  return db.promise().execute(
-  )
+  return db.promise().execute(`
+
+  ;`)
   .catch(err => {
     console.log(err);
   });
@@ -175,5 +179,6 @@ module.exports = {
 
   viewEmployeeByDepartment,
   viewEmployeeByManager,
-  addEmployee
+  addEmployee,
+  removeEmployee
 }

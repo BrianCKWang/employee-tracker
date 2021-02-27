@@ -152,7 +152,7 @@ const promptAction = () => {
       case 'View All Employees By Department':
         sendQuery.viewAllDepartments()
         .then((rows) => rows[0].map(department => [department.name, department.id]))
-        .then(departmentArr => promptViewChoice(departmentArr, 'Which department would you like to View?'))
+        .then(departmentArr => promptViewChoice(departmentArr, 'Which department would you like to view?'))
         .then(department_id => sendQuery.viewEmployeeByDepartment(department_id))
         .then((rows) => showTable(rows))
         .then(() => promptAction())
@@ -161,7 +161,7 @@ const promptAction = () => {
       case'View All Employees By Manager':
         sendQuery.viewAllManagers()
         .then((rows) => rows[0].map(manager => [manager.Name, manager.ID]))
-        .then(ManagerArr => promptViewChoice(ManagerArr, 'Which manager would you like to View?'))
+        .then(ManagerArr => promptViewChoice(ManagerArr, 'Which manager would you like to view?'))
         .then(manager_id => sendQuery.viewEmployeeByManager(manager_id))
         .then((rows) => showTable(rows))
         .then(() => promptAction())
@@ -172,10 +172,23 @@ const promptAction = () => {
         .then(employee => sendQuery.addEmployee(employee))
         .then(() => sendQuery.viewAllEmployees())
         .then((rows) => showTable(rows))
-        // .then(ans => console.log(ans))
-        .then(() => promptAction());
+        .then(() => promptAction())
+        .catch(console.log);
         return; 
       case'Remove Employee':
+        sendQuery.viewAllEmployees()
+        // .then((rows) => console.log(rows[0]))
+        .then((rows) => rows[0].map(employee => [['[', employee.Title, '] ', employee.First_Name, ' ', employee.Last_Name].join(''), employee.ID]))
+        .then(employeeArr => promptViewChoice(employeeArr, 'Which employee would you like to remove?'))
+        .then(employee_id => sendQuery.removeEmployee(employee_id))
+        // .then((rows) => showTable(rows))
+        // .then((rows) => console.log(rows))
+        // .then((ans) => console.log(ans))
+        // .then((rows) => showTable(rows[0].map(employee => [employee.First_Name, employee.Last_Name, employee.ID])))
+        .then(() => sendQuery.viewAllEmployees())
+        .then((rows) => showTable(rows))
+        .then(() => promptAction())
+        .catch(console.log);
         return; 
       case'Update Employee Role':
         return; 
