@@ -23,12 +23,9 @@ CREATE TABLE IF NOT EXISTS employee (
   id INT NOT NULL AUTO_INCREMENT,
   first_name VARCHAR(30) NOT NULL,
   last_name VARCHAR(30) NOT NULL,
-  role_id INTEGER,
-  manager_id INTEGER,
+  role_id INT,
+  manager_id INT,
   PRIMARY KEY(id),
   FOREIGN KEY (role_id) REFERENCES role(id) ON DELETE SET NULL,
   FOREIGN KEY (manager_id) REFERENCES employee(id) ON DELETE SET NULL
 )ENGINE=INNODB;
-
-
--- SELECT e.first_name, e.last_name employee, r.title, r.salary role FROM employee e INNER JOIN role r ON e.role_id = r.id;

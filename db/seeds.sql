@@ -14,30 +14,29 @@ INSERT INTO role (title, salary, department_id)
                    ('sales', 175000 , 2),
                    ('HR lead', 115000 , 3),
                    ('HR', 73000 , 3);
+                    
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id) 
-            VALUES  ('Ronald',    'Firbank',    1, NULL),
-                    ('Virginia',  'Woolf',      2, 1),
-                    ('Piers',     'Gaveston',   2, 1),
-                    ('Charles',   'LeRoi',      3, 1),
-                    ('Katherine', 'Mansfield',  3, 1),
-                    ('Dora',      'Carrington', 4, 1),
-                    ('Edward',    'Bellamy',    4, 1),
-                    ('Montague',  'Summers',    1, NULL),
-                    ('Octavia',   'Butler',     2, 8),
-                    ('Unica',     'Zurn',       2, 8),
-                    ('Rhoda',     'Broughton',  2, 8),
-                    ('Hart',      'Crane',      4, 8),
-                    ('Vernon',    'Lee',        5, NULL),
-                    ('Harriet',   'Martineau',  8, 14),
-                    ('Frederick', 'Marryat',    7, NULL),
-                    ('Arthur',    'Machen',     6, 13),
-                    ('Vitorio',   'DeSica',     4, 8),
-                    ('Wilkie',    'Collins',    4, 8),
-                    ('Elizabeth', 'Gaskell',    4, 8),
-                    ('George',    'Sand',       4, 8);
-
-                    
+            VALUES  ('Ronald',    'Firbank',    1, NULL ),
+                    ('Montague',  'Summers',    1, NULL ),
+                    ('Vernon',    'Lee',        5, NULL ),
+                    ('Frederick', 'Marryat',    7, NULL ),
+                    ('Virginia',  'Woolf',      2, 1    ),
+                    ('Piers',     'Gaveston',   2, 1    ),
+                    ('Charles',   'LeRoi',      3, 1    ),
+                    ('Katherine', 'Mansfield',  3, 1    ),
+                    ('Dora',      'Carrington', 4, 1    ),
+                    ('Edward',    'Bellamy',    4, 1    ),
+                    ('Octavia',   'Butler',     2, 2    ),
+                    ('Unica',     'Zurn',       2, 2    ),
+                    ('Rhoda',     'Broughton',  2, 2    ),
+                    ('Hart',      'Crane',      4, 2    ),
+                    ('Arthur',    'Machen',     6, 3    ),
+                    ('Vitorio',   'DeSica',     4, 2    ),
+                    ('Wilkie',    'Collins',    4, 2    ),
+                    ('Elizabeth', 'Gaskell',    4, 2    ),
+                    ('George',    'Sand',       4, 2    ),
+                    ('Harriet',   'Martineau',  8, 4    );
 
 -- INSERT INTO candidates (first_name, last_name, party_id, industry_connected)
 -- VALUES

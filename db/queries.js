@@ -21,7 +21,7 @@ const viewAllEmployees = function() {
   });
 }
 
-const viewAllDepartment = function() {
+const viewAllDepartments = function() {
   return db.promise().execute(`
     SELECT *
     FROM department
@@ -33,7 +33,7 @@ const viewAllDepartment = function() {
   });
 }
 
-const viewDepartment = function(department_id) {
+const viewEmployeeByDepartment = function(department_id) {
   return db.promise().execute(`
     SELECT e.id AS "ID", 
           e.first_name AS "First Name", 
@@ -54,16 +54,65 @@ const viewDepartment = function(department_id) {
   });
 }
 
-const viewAllEmployees_byManager = function() {
-  return db.promise().execute(
+const viewAllManagers = function() {
+  return db.promise().execute(`
+      SELECT e.id AS "ID",
+          CONCAT("[",  d.name, "] ", e.first_name , " ",  e.last_name) AS "Name"
+      FROM employee e 
+      LEFT JOIN employee m ON e.manager_id = m.id
+      LEFT JOIN role r ON e.role_id = r.id
+      LEFT JOIN department d ON r.department_id = d.id
+      WHERE e.manager_id IS NULL
+      ORDER BY id
+    ;`
   )
   .catch(err => {
     console.log(err);
   });
 }
 
-const addEmployee = function() {
-  return db.promise().execute(
+const viewEmployeeByManager = function(manager_id) {
+  console.log(`manager_id: ${manager_id}`);
+  return db.promise().execute(`
+    SELECT e.id AS "ID", 
+          e.first_name AS "First Name", 
+          e.last_name AS "Last Name", 
+          r.title AS "Title", 
+          d.name AS "Department", 
+          r.salary "Salary"
+    FROM employee e
+    LEFT JOIN role r ON e.role_id = r.id
+    LEFT JOIN department d ON r.department_id = d.id
+    WHERE e.manager_id = ${manager_id}
+    ORDER BY id
+    ;`
+  )
+  .catch(err => {
+    console.log(err);
+  });
+}
+
+const viewAllRoles = function() {
+  return db.promise().execute(`
+    SELECT r.id,
+          r.title,
+          r.salary,
+          d.name AS department
+    FROM role r
+    LEFT JOIN department d ON r.department_id = d.id
+    ORDER BY id
+    ;`
+  )
+  .catch(err => {
+    console.log(err);
+  });
+}
+
+const addEmployee = function(employee) {
+  return db.promise().execute(`
+    INSERT INTO employee (first_name, last_name, role_id, manager_id) 
+              VALUES  ('${employee.first_name}',    '${employee.last_name}',    ${employee.role}, ${employee.manager} )
+    ;`
   )
   .catch(err => {
     console.log(err);
@@ -120,6 +169,11 @@ const editDepartment = function() {
 
 module.exports = {
   viewAllEmployees,
-  viewAllDepartment,
-  viewDepartment
+  viewAllDepartments,
+  viewAllManagers,
+  viewAllRoles,
+
+  viewEmployeeByDepartment,
+  viewEmployeeByManager,
+  addEmployee
 }
