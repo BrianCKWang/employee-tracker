@@ -21,7 +21,19 @@ const viewAllEmployees = function() {
   });
 }
 
-const viewAllEmployees_byDepartment = function() {
+const viewAllDepartment = function() {
+  return db.promise().execute(`
+    SELECT *
+    FROM department
+    ORDER BY id
+    ;`
+  )
+  .catch(err => {
+    console.log(err);
+  });
+}
+
+const viewDepartment = function(department_id) {
   return db.promise().execute(`
     SELECT e.id AS "ID", 
           e.first_name AS "First Name", 
@@ -33,8 +45,8 @@ const viewAllEmployees_byDepartment = function() {
     FROM employee e
     LEFT JOIN employee m ON e.manager_id = m.id
     LEFT JOIN role r ON e.role_id = r.id
-    LEFT JOIN department d ON r.department_id = d.id
-    ORDER BY department_id, id
+    INNER JOIN department d ON r.department_id = d.id AND d.id = ${department_id}
+    ORDER BY id
     ;`
   )
   .catch(err => {
@@ -98,14 +110,6 @@ const editRole = function() {
   });
 }
 
-const viewDepartment = function() {
-  return db.promise().execute(
-  )
-  .catch(err => {
-    console.log(err);
-  });
-}
-
 const editDepartment = function() {
   return db.promise().execute(
   )
@@ -116,5 +120,6 @@ const editDepartment = function() {
 
 module.exports = {
   viewAllEmployees,
-  viewAllEmployees_byDepartment
+  viewAllDepartment,
+  viewDepartment
 }

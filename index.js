@@ -9,7 +9,12 @@ const showTable = ([rows]) => {
   if(isDebugMode){
     console.log(rows);
   }
+  console.log();
   console.table(rows);
+}
+
+const promptChoice = () => {
+  
 }
 
 const promptAction = () => {
@@ -30,7 +35,7 @@ const promptAction = () => {
               'Edit Department',
               'Exit'
             ],
-    default: 'View All Employees',
+    default: 0,
     loop: false
   })
   .then(response => {
@@ -43,7 +48,26 @@ const promptAction = () => {
           .catch(console.log);
         return;
       case 'View All Employees By Department':
-          sendQuery.viewAllEmployees_byDepartment()
+          sendQuery.viewAllDepartment()
+          .then((rows) => rows[0].map(department => [department.name, department.id]))
+          .then(departmentArr => {
+            return inquirer.prompt({
+              type: 'rawlist',
+              name: 'action',
+              message: 'Which department would you like to View?',
+              choices: departmentArr.map(department => department[0]),
+              default: 0,
+              loop: false
+            })
+            .then(department_choice => {
+              return departmentArr.filter(department => department[0] === department_choice.action)[0][1];
+            })
+            .catch(console.log);
+          })
+          .then(department_id => {
+            return sendQuery.viewDepartment(department_id)
+            .catch(console.log);
+          })
           .then((rows) => showTable(rows))
           .then(() => promptAction())
           .catch(console.log);
