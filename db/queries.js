@@ -225,7 +225,7 @@ const deleteDepartment = function(department_id) {
   // console.log("department_id");
   // console.log(department_id);
   return db.promise().execute(`
-    DELETE FROM role
+    DELETE FROM department
     WHERE id = ${department_id}
   ;`)
   .catch(err => {
