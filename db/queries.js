@@ -62,7 +62,7 @@ const viewAllManagers = function() {
       LEFT JOIN employee m ON e.manager_id = m.id
       LEFT JOIN role r ON e.role_id = r.id
       LEFT JOIN department d ON r.department_id = d.id
-      WHERE e.manager_id IS NULL
+      WHERE r.title LIKE '%lead%'
       ORDER BY id
     ;`
   )
@@ -71,8 +71,10 @@ const viewAllManagers = function() {
   });
 }
 
+// WHERE e.manager_id IS NULL
+
 const viewEmployeeByManager = function(manager_id) {
-  console.log(`manager_id: ${manager_id}`);
+  // console.log(`manager_id: ${manager_id}`);
   return db.promise().execute(`
     SELECT e.id AS "ID", 
           e.first_name AS "First_Name", 
@@ -129,43 +131,103 @@ const removeEmployee = function(employee_id) {
   });
 }
 
-const updateEmployeeRole = function() {
+const updateEmployeeRole = function(employee_id, role_id) {
   return db.promise().execute(`
-
+    UPDATE employee
+    SET
+      role_id = ${role_id}
+    WHERE
+      id = ${employee_id}
   ;`)
   .catch(err => {
     console.log(err);
   });
 }
 
-const updateEmployeeManager = function() {
+const updateEmployeeManager = function(employee_id, manager_id) {
   return db.promise().execute(`
-
+  UPDATE employee
+  SET
+    manager_id = ${manager_id}
+  WHERE
+    id = ${employee_id}
   ;`)
   .catch(err => {
     console.log(err);
   });
 }
 
-const viewRoles = function() {
-  return db.promise().execute(
+const addRole = function(title, salary, department_id) {
+  return db.promise().execute(`
+    INSERT INTO role (title, salary, department_id) 
+      VALUES  ('${title}',    ${salary},    ${department_id} )
+    ;`
   )
   .catch(err => {
     console.log(err);
   });
 }
 
-const editRole = function() {
-  return db.promise().execute(
+const editRole = function(role_id, title, salary, department_id) {
+  return db.promise().execute(`
+    UPDATE role
+    SET
+      title = '${title}',
+      salary = ${salary},
+      department_id = ${department_id}
+    WHERE
+      id = ${role_id}
+    ;`
   )
   .catch(err => {
     console.log(err);
   });
 }
 
-const editDepartment = function() {
-  return db.promise().execute(
+const deleteRole = function(role_id) {
+  // console.log("role_id");
+  // console.log(role_id);
+  return db.promise().execute(`
+    DELETE FROM role
+    WHERE id = ${role_id}
+  ;`)
+  .catch(err => {
+    console.log(err);
+  });
+}
+
+const addDepartment = function(name) {
+  return db.promise().execute(`
+  INSERT INTO department (name) 
+    VALUES  ('${name}')
+  ;`
   )
+  .catch(err => {
+    console.log(err);
+  });
+}
+
+const editDepartment = function(department_id, name) {
+  return db.promise().execute(`
+    UPDATE department
+    SET
+      name = '${name}'
+    WHERE
+      id = ${department_id}
+    ;`
+  )
+  .catch(err => {
+    console.log(err);
+  });
+}
+
+const deleteDepartment = function(department_id) {
+  // console.log("department_id");
+  // console.log(department_id);
+  return db.promise().execute(`
+    DELETE FROM role
+    WHERE id = ${department_id}
+  ;`)
   .catch(err => {
     console.log(err);
   });
@@ -179,6 +241,17 @@ module.exports = {
 
   viewEmployeeByDepartment,
   viewEmployeeByManager,
+
   addEmployee,
-  removeEmployee
+  removeEmployee,
+  updateEmployeeRole,
+  updateEmployeeManager,
+
+  addRole,
+  editRole,
+  deleteRole,
+
+  addDepartment,
+  editDepartment,
+  deleteDepartment
 }
