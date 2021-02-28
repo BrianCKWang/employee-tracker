@@ -27,14 +27,14 @@ const promptAction = () => {
               'Remove Employee', 
               'Update Employee Role', 
               'Update Employee Manager', 
-              'View Roles',
-              'Add Role',
-              'Edit Role',
-              'Delete Role',
               'View Department',
               'Add Department',
               'Edit Department',
               'Delete Department',
+              'View Roles',
+              'Add Role',
+              'Edit Role',
+              'Delete Role',
               'Exit'
             ],
     default: 0,
@@ -117,6 +117,43 @@ const promptAction = () => {
         .then(() => promptAction())
         .catch(console.log);
         return; 
+        case'View Department':
+        sendQuery.viewAllDepartments()
+        .then((rows) => showTable(rows))
+        .then(() => promptAction())
+        .catch(console.log);
+        return;
+      case 'Add Department':
+        toPrompt.forDepartment()
+        .then(department => sendQuery.addDepartment(department.name))
+        .then(() => sendQuery.viewAllDepartments())
+        .then((rows) => showTable(rows))
+        .then(() => promptAction())
+        .catch(console.log);
+        return;
+      case 'Edit Department':
+        sendQuery.viewAllDepartments()
+        .then((rows) => showTable(rows))
+        .then(() => toPrompt.forSelectDepartment())
+        .then(department_id => decisionArr.push(department_id))
+        .then(() => toPrompt.forDepartment())
+        .then(departmentInfo => decisionArr.push(departmentInfo))
+        .then(() => sendQuery.editDepartment(decisionArr[0].department_id, decisionArr[1].name))
+        .then(() => sendQuery.viewAllDepartments())
+        .then((rows) => showTable(rows))
+        .then(() => promptAction())
+        .catch(console.log);
+        return;
+      case 'Delete Department':
+        sendQuery.viewAllDepartments()
+        .then((rows) => rows[0].map(department => [department.name]))
+        .then(() => toPrompt.forSelectDepartment())
+        .then(department => sendQuery.deleteDepartment(department.department_id))
+        .then(() => sendQuery.viewAllDepartments())
+        .then((rows) => showTable(rows))
+        .then(() => promptAction())
+        .catch(console.log);
+        return;
       case'View Roles':
         sendQuery.viewAllRoles()
         .then((rows) => showTable(rows))
@@ -151,43 +188,6 @@ const promptAction = () => {
         .then(() => toPrompt.forSelectRole())
         .then(role => sendQuery.deleteRole(role.role_id))
         .then(() => sendQuery.viewAllRoles())
-        .then((rows) => showTable(rows))
-        .then(() => promptAction())
-        .catch(console.log);
-        return;
-      case'View Department':
-        sendQuery.viewAllDepartments()
-        .then((rows) => showTable(rows))
-        .then(() => promptAction())
-        .catch(console.log);
-        return;
-      case 'Add Department':
-        toPrompt.forDepartment()
-        .then(department => sendQuery.addDepartment(department.name))
-        .then(() => sendQuery.viewAllDepartments())
-        .then((rows) => showTable(rows))
-        .then(() => promptAction())
-        .catch(console.log);
-        return;
-      case 'Edit Department':
-        sendQuery.viewAllDepartments()
-        .then((rows) => showTable(rows))
-        .then(() => toPrompt.forSelectDepartment())
-        .then(department_id => decisionArr.push(department_id))
-        .then(() => toPrompt.forDepartment())
-        .then(departmentInfo => decisionArr.push(departmentInfo))
-        .then(() => sendQuery.editDepartment(decisionArr[0].department_id, decisionArr[1].name))
-        .then(() => sendQuery.viewAllDepartments())
-        .then((rows) => showTable(rows))
-        .then(() => promptAction())
-        .catch(console.log);
-        return;
-      case 'Delete Department':
-        sendQuery.viewAllDepartments()
-        .then((rows) => rows[0].map(department => [department.name]))
-        .then(() => toPrompt.forSelectDepartment())
-        .then(department => sendQuery.deleteDepartment(department.department_id))
-        .then(() => sendQuery.viewAllDepartments())
         .then((rows) => showTable(rows))
         .then(() => promptAction())
         .catch(console.log);
